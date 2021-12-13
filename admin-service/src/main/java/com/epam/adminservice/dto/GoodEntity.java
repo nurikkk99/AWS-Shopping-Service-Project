@@ -1,5 +1,6 @@
 package com.epam.adminservice.dto;
 
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -15,6 +16,7 @@ public class GoodEntity {
     private int price;
     private String manufacturer;
     private String type;
+    private LocalDateTime releaseDate;
 
     public String getId() {
         return id;
@@ -54,5 +56,13 @@ public class GoodEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public LocalDateTime getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDateTime releaseDate) {
+        this.releaseDate = releaseDate;
     }
 }

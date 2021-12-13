@@ -15,6 +15,7 @@ public class GoodEntityToGetGoodDtoMapper {
         getGoodDto.setName(goodEntity.getName());
         getGoodDto.setManufacturer(goodEntity.getManufacturer());
         getGoodDto.setGoodsType(GoodsType.valueOf(goodEntity.getType()));
+        getGoodDto.setLocalDateTime(goodEntity.getReleaseDate());
         return getGoodDto;
     }
 }
