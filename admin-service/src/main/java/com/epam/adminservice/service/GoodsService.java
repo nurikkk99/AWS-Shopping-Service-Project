@@ -26,4 +26,8 @@ public class GoodsService {
     public GoodEntity save(final GoodEntity goodEntity){
         return goodsRepository.save(goodEntity);
     }
+
+    public void delete (final GoodEntity goodEntity) {
+        goodsRepository.delete(goodEntity);
+    }
 }

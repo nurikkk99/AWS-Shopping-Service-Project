@@ -1,8 +1,6 @@
-# AWS-Shopping-Service-Project
+#AWS Shopping Service Project
+#Admin service
+The admin service is designed to manage the objects of the online store (adding, deleting, updating the assortment). The service provides an entrance to the administrator account for the implementation of the above functions.
 
-# SWAGGER
-There are to blocks of endpoints:
-
-Admin Endpoints: https://app.swaggerhub.com/apis-docs/nurikkk99/AWS_Shopping_Project/1.0.0
-
-Customer Endpoints: https://app.swaggerhub.com/apis-docs/nurikkk99/AWS_Shopping_Project_Cunstomer/1.0.0
+#Customer-service
+This service is designed to provide services for receiving, filtering goods. The service provides the ability to add goods to the basket / several baskets, as well as placing an order based on the goods in the basket.
