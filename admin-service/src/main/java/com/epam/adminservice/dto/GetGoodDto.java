@@ -1,23 +1,15 @@
 package com.epam.adminservice.dto;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-public class GetGoodDto {
+public class GetGoodDto extends GoodDto{
 
-    private String id;
     private String name;
-    private GoodsType goodsType;
+    private GoodsType type;
     private int price;
     private String manufacturer;
-    private LocalDateTime localDateTime;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private LocalDateTime releaseDate;
 
     public String getName() {
         return name;
@@ -27,12 +19,12 @@ public class GetGoodDto {
         this.name = name;
     }
 
-    public GoodsType getGoodsType() {
-        return goodsType;
+    public GoodsType getType() {
+        return type;
     }
 
-    public void setGoodsType(GoodsType goodsType) {
-        this.goodsType = goodsType;
+    public void setType(GoodsType type) {
+        this.type = type;
     }
 
     public int getPrice() {
@@ -51,11 +43,34 @@ public class GetGoodDto {
         this.manufacturer = manufacturer;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public LocalDateTime getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public void setReleaseDate(LocalDateTime releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    @Override
+    public GetGoodDto entityToDto(GoodEntity goodEntity){
+        GetGoodDto getGoodDto = new GetGoodDto();
+        getGoodDto.setId(goodEntity.getId());
+        getGoodDto.setPrice(goodEntity.getPrice());
+        getGoodDto.setName(goodEntity.getName());
+        getGoodDto.setManufacturer(goodEntity.getManufacturer());
+        Optional.ofNullable(goodEntity.getType()).ifPresent(x->getGoodDto.setType(GoodsType.valueOf(x)));
+        getGoodDto.setReleaseDate(goodEntity.getReleaseDate());
+        return getGoodDto;
+    }
+
+    @Override
+    public GoodEntity dtoToEntity(){
+        GoodEntity goodEntity = new GoodEntity();
+        goodEntity.setId(this.getId());
+        goodEntity.setPrice(this.price);
+        goodEntity.setName(this.name);
+        goodEntity.setManufacturer(this.getManufacturer());
+        Optional.ofNullable(this.type).ifPresent(x->goodEntity.setType(x.toString()));
+        return goodEntity;
     }
 }

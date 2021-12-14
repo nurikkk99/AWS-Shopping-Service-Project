@@ -2,23 +2,13 @@ package com.epam.adminservice.dto;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
-public class CreateGoodDto extends GoodDto{
-
-    @NotNull
-    @NotBlank
+public class UpdateGoodDto extends GoodDto{
     private String name;
     private GoodsType type;
-
-    @NotNull
-    @Min(value = 1, message = "The value can not be less than 1")
     private int price;
     private String manufacturer;
 
-    @NotNull
     private LocalDateTime releaseDate;
 
     public String getName() {
@@ -62,21 +52,19 @@ public class CreateGoodDto extends GoodDto{
     }
 
     @Override
-    public CreateGoodDto entityToDto(GoodEntity goodEntity){
-        CreateGoodDto createGoodDto = new CreateGoodDto();
-        createGoodDto.setId(goodEntity.getId());
-        createGoodDto.setPrice(goodEntity.getPrice());
-        createGoodDto.setName(goodEntity.getName());
-        createGoodDto.setManufacturer(goodEntity.getManufacturer());
-        Optional.ofNullable(goodEntity.getType()).ifPresent(x->createGoodDto.setType(GoodsType.valueOf(x)));
-        createGoodDto.setReleaseDate(goodEntity.getReleaseDate());
-        return createGoodDto;
+    public UpdateGoodDto entityToDto(GoodEntity goodEntity){
+        UpdateGoodDto updateGoodDto = new UpdateGoodDto();
+        updateGoodDto.setPrice(goodEntity.getPrice());
+        updateGoodDto.setName(goodEntity.getName());
+        updateGoodDto.setManufacturer(goodEntity.getManufacturer());
+        updateGoodDto.setType(GoodsType.valueOf(goodEntity.getType()));
+        updateGoodDto.setReleaseDate(goodEntity.getReleaseDate());
+        return updateGoodDto;
     }
 
     @Override
     public GoodEntity dtoToEntity(){
         GoodEntity goodEntity = new GoodEntity();
-        goodEntity.setId(this.getId());
         goodEntity.setPrice(this.price);
         goodEntity.setName(this.name);
         goodEntity.setManufacturer(this.getManufacturer());

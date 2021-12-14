@@ -16,6 +16,7 @@ public class GoodEntity {
     private int price;
     private String manufacturer;
     private String type;
+
     private LocalDateTime releaseDate;
 
     public String getId() {

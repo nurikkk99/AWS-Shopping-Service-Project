@@ -1,75 +1,64 @@
 package com.epam.adminservice.service;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.util.AssertionErrors.assertFalse;
 
+import com.epam.adminservice.config.TestContainerConfig;
+import com.epam.adminservice.dto.CreateGoodDto;
 import com.epam.adminservice.dto.GetGoodDto;
 import com.epam.adminservice.dto.GoodEntity;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import com.epam.adminservice.dto.GoodsType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Ignore
+@SpringBootTest(classes = TestContainerConfig.class)
 @Testcontainers
 @RunWith(SpringRunner.class)
-@SpringBootTest
 public class GoodServiceTest {
 
-    private GoodEntity savedEntity;
+    private CreateGoodDto savedDto;
+
+    @Autowired
+    private JdbcDatabaseContainer jdbcDatabaseContainer;
 
     @Autowired
     private GoodsService goodsService;
 
-    @Container
-    private final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:14")
-            .withExposedPorts(5433)
-            .withPassword("password")
-            .withUsername("postgres")
-            .withDatabaseName("good");
-
-    @Test
-    public void test(){
-        assertTrue(postgreSQLContainer.isRunning());
-    }
-
     @Before
     public void prepareData(){
-        savedEntity = new GoodEntity();
-        savedEntity.setId("Test");
-        savedEntity.setPrice(1000);
-        savedEntity.setManufacturer("TestManufacturer");
-        savedEntity.setName("TestName");
-        savedEntity.setType("Costumes");
-        LocalDate date = LocalDate.of(1,1,1);
-        LocalTime time = LocalTime.of(1,1);
-        savedEntity.setReleaseDate(LocalDateTime.of(date, time));
-        goodsService.save(savedEntity);
+        savedDto = new CreateGoodDto();
+        savedDto.setId("Test");
+        goodsService.save(savedDto);
     }
 
     @After
     public void dropData() {
-        goodsService.delete(savedEntity);
+        goodsService.delete(savedDto);
     }
 
     @Test
     public void findAllTest() {
-        final Collection<GetGoodDto> expectedCollection = goodsService.findAll();
-        assertFalse("Collection is empty", expectedCollection.isEmpty());
-
+        final Collection<GetGoodDto> actualCollection = goodsService.findAll();
+        assertFalse("Collection is empty", actualCollection.isEmpty());
+        List<GetGoodDto> expectedCollection = new ArrayList<>();
+        GetGoodDto getGoodDto = new GetGoodDto();
+        getGoodDto.setId(savedDto.getId());
+        expectedCollection.add(getGoodDto);
+        assertTrue(expectedCollection.containsAll(actualCollection));
     }
 }
