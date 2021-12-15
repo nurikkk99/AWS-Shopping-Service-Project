@@ -11,17 +11,10 @@ import static org.hamcrest.core.Is.is;
 import com.epam.adminservice.config.TestContainerConfig;
 import com.epam.adminservice.dto.CreateGoodDto;
 import com.epam.adminservice.dto.GetGoodDto;
-import com.epam.adminservice.dto.GoodEntity;
-import com.epam.adminservice.dto.GoodsType;
 import com.epam.adminservice.service.GoodsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +51,7 @@ public class GoodsControllerTest {
     private GoodsService goodsService;
 
     @Before
-    public void prepareData(){
+    public void prepareData() {
         savedDto = new CreateGoodDto();
         savedDto.setId("Test");
         goodsService.save(savedDto);
@@ -74,13 +67,13 @@ public class GoodsControllerTest {
         final Collection<GetGoodDto> expectedCollection = goodsService.findAll();
         assertFalse("Collection is empty", expectedCollection.isEmpty());
 
-        final String contentAsString = mockMvc.perform(get(API_PATH))
-                .andExpect(status().isOk())
+        final String contentAsString = mockMvc.perform(get(API_PATH)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(expectedCollection.size())))
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(jsonPath("$.length()", is(expectedCollection.size()))).andReturn().getResponse()
+                .getContentAsString();
 
-        Collection<GetGoodDto> resultCollection = objectMapper.readValue(contentAsString,
+        Collection<GetGoodDto> resultCollection = objectMapper.readValue(
+                contentAsString,
                 TypeFactory.defaultInstance().constructCollectionType(Collection.class, GetGoodDto.class)
         );
 

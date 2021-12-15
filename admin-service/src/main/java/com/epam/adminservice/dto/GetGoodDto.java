@@ -3,7 +3,7 @@ package com.epam.adminservice.dto;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class GetGoodDto extends GoodDto{
+public class GetGoodDto extends GoodDto {
 
     private String name;
     private GoodsType type;
@@ -52,25 +52,25 @@ public class GetGoodDto extends GoodDto{
     }
 
     @Override
-    public GetGoodDto entityToDto(GoodEntity goodEntity){
+    public GetGoodDto entityToDto(GoodEntity goodEntity) {
         GetGoodDto getGoodDto = new GetGoodDto();
         getGoodDto.setId(goodEntity.getId());
         getGoodDto.setPrice(goodEntity.getPrice());
         getGoodDto.setName(goodEntity.getName());
         getGoodDto.setManufacturer(goodEntity.getManufacturer());
-        Optional.ofNullable(goodEntity.getType()).ifPresent(x->getGoodDto.setType(GoodsType.valueOf(x)));
+        Optional.ofNullable(goodEntity.getType()).ifPresent(x -> getGoodDto.setType(GoodsType.valueOf(x)));
         getGoodDto.setReleaseDate(goodEntity.getReleaseDate());
         return getGoodDto;
     }
 
     @Override
-    public GoodEntity dtoToEntity(){
+    public GoodEntity dtoToEntity() {
         GoodEntity goodEntity = new GoodEntity();
         goodEntity.setId(this.getId());
         goodEntity.setPrice(this.price);
         goodEntity.setName(this.name);
         goodEntity.setManufacturer(this.getManufacturer());
-        Optional.ofNullable(this.type).ifPresent(x->goodEntity.setType(x.toString()));
+        Optional.ofNullable(this.type).ifPresent(x -> goodEntity.setType(x.toString()));
         return goodEntity;
     }
 }

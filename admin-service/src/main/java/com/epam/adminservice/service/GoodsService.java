@@ -14,7 +14,7 @@ public class GoodsService {
     private GoodsRepository goodsRepository;
     private GetGoodDto getGoodDto;
 
-    public GoodsService(GoodsRepository goodsRepository){
+    public GoodsService(GoodsRepository goodsRepository) {
         this.goodsRepository = goodsRepository;
         this.getGoodDto = new GetGoodDto();
     }
@@ -23,11 +23,11 @@ public class GoodsService {
         return goodsRepository.findAll().stream().map(getGoodDto::entityToDto).collect(Collectors.toList());
     }
 
-    public CreateGoodDto save(final CreateGoodDto createGoodDto){
+    public CreateGoodDto save(final CreateGoodDto createGoodDto) {
         return createGoodDto.entityToDto(goodsRepository.save(createGoodDto.dtoToEntity()));
     }
 
-    public void delete (final GoodDto goodDto) {
+    public void delete(final GoodDto goodDto) {
         goodsRepository.delete(goodDto.dtoToEntity());
     }
 }

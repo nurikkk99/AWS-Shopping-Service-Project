@@ -1,7 +1,6 @@
 package com.epam.adminservice.controller;
 
 import com.epam.adminservice.dto.GetGoodDto;
-import com.epam.adminservice.dto.GoodEntity;
 import com.epam.adminservice.service.GoodsService;
 import java.util.Collection;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/goods")
 public class GoodsController {
 
-    private GoodsService goodsService;
+    private final GoodsService goodsService;
 
     public GoodsController(GoodsService goodsService) {
         this.goodsService = goodsService;

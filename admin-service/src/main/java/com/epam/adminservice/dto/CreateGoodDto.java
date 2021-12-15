@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class CreateGoodDto extends GoodDto{
+public class CreateGoodDto extends GoodDto {
 
     @NotNull
     @NotBlank
@@ -62,25 +62,25 @@ public class CreateGoodDto extends GoodDto{
     }
 
     @Override
-    public CreateGoodDto entityToDto(GoodEntity goodEntity){
+    public CreateGoodDto entityToDto(GoodEntity goodEntity) {
         CreateGoodDto createGoodDto = new CreateGoodDto();
         createGoodDto.setId(goodEntity.getId());
         createGoodDto.setPrice(goodEntity.getPrice());
         createGoodDto.setName(goodEntity.getName());
         createGoodDto.setManufacturer(goodEntity.getManufacturer());
-        Optional.ofNullable(goodEntity.getType()).ifPresent(x->createGoodDto.setType(GoodsType.valueOf(x)));
+        Optional.ofNullable(goodEntity.getType()).ifPresent(x -> createGoodDto.setType(GoodsType.valueOf(x)));
         createGoodDto.setReleaseDate(goodEntity.getReleaseDate());
         return createGoodDto;
     }
 
     @Override
-    public GoodEntity dtoToEntity(){
+    public GoodEntity dtoToEntity() {
         GoodEntity goodEntity = new GoodEntity();
         goodEntity.setId(this.getId());
         goodEntity.setPrice(this.price);
         goodEntity.setName(this.name);
         goodEntity.setManufacturer(this.getManufacturer());
-        Optional.ofNullable(this.type).ifPresent(x->goodEntity.setType(x.toString()));
+        Optional.ofNullable(this.type).ifPresent(x -> goodEntity.setType(x.toString()));
         return goodEntity;
     }
 }

@@ -3,7 +3,8 @@ package com.epam.adminservice.dto;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class UpdateGoodDto extends GoodDto{
+public class UpdateGoodDto extends GoodDto {
+
     private String name;
     private GoodsType type;
     private int price;
@@ -52,7 +53,7 @@ public class UpdateGoodDto extends GoodDto{
     }
 
     @Override
-    public UpdateGoodDto entityToDto(GoodEntity goodEntity){
+    public UpdateGoodDto entityToDto(GoodEntity goodEntity) {
         UpdateGoodDto updateGoodDto = new UpdateGoodDto();
         updateGoodDto.setPrice(goodEntity.getPrice());
         updateGoodDto.setName(goodEntity.getName());
@@ -63,12 +64,12 @@ public class UpdateGoodDto extends GoodDto{
     }
 
     @Override
-    public GoodEntity dtoToEntity(){
+    public GoodEntity dtoToEntity() {
         GoodEntity goodEntity = new GoodEntity();
         goodEntity.setPrice(this.price);
         goodEntity.setName(this.name);
         goodEntity.setManufacturer(this.getManufacturer());
-        Optional.ofNullable(this.type).ifPresent(x->goodEntity.setType(x.toString()));
+        Optional.ofNullable(this.type).ifPresent(x -> goodEntity.setType(x.toString()));
         return goodEntity;
     }
 }
