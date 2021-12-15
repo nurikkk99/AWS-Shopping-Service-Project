@@ -55,10 +55,11 @@ public class UpdateGoodDto extends GoodDto {
     @Override
     public UpdateGoodDto entityToDto(GoodEntity goodEntity) {
         UpdateGoodDto updateGoodDto = new UpdateGoodDto();
-        updateGoodDto.setPrice(goodEntity.getPrice());
+        updateGoodDto.setId(goodEntity.getId());
         updateGoodDto.setName(goodEntity.getName());
+        Optional.ofNullable(goodEntity.getType()).ifPresent(x -> updateGoodDto.setType(GoodsType.valueOf(x)));
+        updateGoodDto.setPrice(goodEntity.getPrice());
         updateGoodDto.setManufacturer(goodEntity.getManufacturer());
-        updateGoodDto.setType(GoodsType.valueOf(goodEntity.getType()));
         updateGoodDto.setReleaseDate(goodEntity.getReleaseDate());
         return updateGoodDto;
     }
@@ -66,10 +67,12 @@ public class UpdateGoodDto extends GoodDto {
     @Override
     public GoodEntity dtoToEntity() {
         GoodEntity goodEntity = new GoodEntity();
-        goodEntity.setPrice(this.price);
+        goodEntity.setId(this.getId());
         goodEntity.setName(this.name);
-        goodEntity.setManufacturer(this.getManufacturer());
         Optional.ofNullable(this.type).ifPresent(x -> goodEntity.setType(x.toString()));
+        goodEntity.setPrice(this.price);
+        goodEntity.setManufacturer(this.getManufacturer());
+        goodEntity.setReleaseDate(this.releaseDate);
         return goodEntity;
     }
 }

@@ -65,10 +65,10 @@ public class CreateGoodDto extends GoodDto {
     public CreateGoodDto entityToDto(GoodEntity goodEntity) {
         CreateGoodDto createGoodDto = new CreateGoodDto();
         createGoodDto.setId(goodEntity.getId());
-        createGoodDto.setPrice(goodEntity.getPrice());
         createGoodDto.setName(goodEntity.getName());
-        createGoodDto.setManufacturer(goodEntity.getManufacturer());
         Optional.ofNullable(goodEntity.getType()).ifPresent(x -> createGoodDto.setType(GoodsType.valueOf(x)));
+        createGoodDto.setPrice(goodEntity.getPrice());
+        createGoodDto.setManufacturer(goodEntity.getManufacturer());
         createGoodDto.setReleaseDate(goodEntity.getReleaseDate());
         return createGoodDto;
     }
@@ -77,10 +77,11 @@ public class CreateGoodDto extends GoodDto {
     public GoodEntity dtoToEntity() {
         GoodEntity goodEntity = new GoodEntity();
         goodEntity.setId(this.getId());
-        goodEntity.setPrice(this.price);
         goodEntity.setName(this.name);
-        goodEntity.setManufacturer(this.getManufacturer());
         Optional.ofNullable(this.type).ifPresent(x -> goodEntity.setType(x.toString()));
+        goodEntity.setPrice(this.price);
+        goodEntity.setManufacturer(this.getManufacturer());
+        goodEntity.setReleaseDate(this.releaseDate);
         return goodEntity;
     }
 }

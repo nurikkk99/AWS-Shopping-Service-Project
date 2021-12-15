@@ -76,7 +76,6 @@ public class GoodsControllerTest {
                 contentAsString,
                 TypeFactory.defaultInstance().constructCollectionType(Collection.class, GetGoodDto.class)
         );
-
         assertTrue(resultCollection.containsAll(expectedCollection));
     }
 }
