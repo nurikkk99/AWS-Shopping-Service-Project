@@ -1,5 +1,6 @@
 package com.epam.adminservice.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.validation.constraints.Min;
@@ -15,7 +16,7 @@ public class CreateGoodDto extends GoodDto {
 
     @NotNull
     @Min(value = 1, message = "The value can not be less than 1")
-    private int price;
+    private BigDecimal price;
     private String manufacturer;
 
     @NotNull
@@ -37,11 +38,11 @@ public class CreateGoodDto extends GoodDto {
         this.type = type;
     }
 
-    public int getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

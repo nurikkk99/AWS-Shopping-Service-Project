@@ -1,5 +1,6 @@
 package com.epam.adminservice.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -7,7 +8,7 @@ public class GetGoodDto extends GoodDto {
 
     private String name;
     private GoodsType type;
-    private int price;
+    private BigDecimal price;
     private String manufacturer;
     private LocalDateTime releaseDate;
 
@@ -27,11 +28,11 @@ public class GetGoodDto extends GoodDto {
         this.type = type;
     }
 
-    public int getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

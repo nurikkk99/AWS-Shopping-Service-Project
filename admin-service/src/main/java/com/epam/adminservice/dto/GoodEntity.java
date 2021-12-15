@@ -1,5 +1,6 @@
 package com.epam.adminservice.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +14,7 @@ public class GoodEntity {
     private String id;
 
     private String name;
-    private int price;
+    private BigDecimal price;
     private String manufacturer;
     private String type;
 
@@ -35,11 +36,11 @@ public class GoodEntity {
         this.name = name;
     }
 
-    public int getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
