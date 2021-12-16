@@ -2,7 +2,9 @@ package com.epam.adminservice.service;
 
 import com.epam.adminservice.dto.CreateGoodDto;
 import com.epam.adminservice.dto.GetGoodDto;
-import com.epam.adminservice.dto.GoodDto;
+import com.epam.adminservice.dto.GoodEntity;
+import com.epam.adminservice.dto.UpdateGoodDto;
+import com.epam.adminservice.exception.EntityNotFoundException;
 import com.epam.adminservice.repository.GoodsRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,13 +29,38 @@ public class GoodsService {
         return goodsRepository.findAll().stream().map(getGoodDto::entityToDto).collect(Collectors.toList());
     }
 
-    public CreateGoodDto save(final CreateGoodDto createGoodDto) {
-        logger.info("Saving good entity with id = {}", createGoodDto.getId());
-        return createGoodDto.entityToDto(goodsRepository.save(createGoodDto.dtoToEntity()));
+    public CreateGoodDto save(CreateGoodDto goodDto) {
+        logger.info("Saving good entity");
+        return goodDto.entityToDto(goodsRepository.save(goodDto.dtoToEntity()));
     }
 
-    public void delete(final GoodDto goodDto) {
-        logger.info("Deleting good entity with id = {}", goodDto.getId());
-        goodsRepository.delete(goodDto.dtoToEntity());
+    public UpdateGoodDto update(Long id, UpdateGoodDto goodDto) {
+        if(findOne(id) == null) {
+            throw new EntityNotFoundException("Entity with id "+id+" does not exist");
+        }
+        logger.info("Updating good entity with id = {}", id);
+        goodDto.setId(id);
+        return goodDto.entityToDto(goodsRepository.save(goodDto.dtoToEntity()));
+    }
+
+    public GetGoodDto findOne(Long id) {
+        GoodEntity goodEntity = goodsRepository.getById(id);
+        if(goodEntity == null){
+            throw new EntityNotFoundException("Entity with id "+id+" does not exist");
+        }
+        return getGoodDto.entityToDto(goodEntity);
+    }
+
+    public void deleteOne(Long id) {
+        GoodEntity goodEntity = goodsRepository.getById(id);
+        if(goodEntity == null){
+            throw new EntityNotFoundException("Entity with id "+id+" does not exist");
+        }
+        logger.info("Deleting good entity with id = {}", id);
+        goodsRepository.deleteById(id);
+    }
+
+    public void deleteAll() {
+        goodsRepository.deleteAll();
     }
 }

@@ -2,10 +2,10 @@ create schema test;
 
 create table good
 (
-    id varchar primary key,
-    type varchar(255),
-    manufacturer varchar(255),
+    id bigserial primary key,
+    type varchar,
+    manufacturer varchar,
     price numeric,
-    name varchar(255),
+    name varchar,
     release_date timestamp
 );
