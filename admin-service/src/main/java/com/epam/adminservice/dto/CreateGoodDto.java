@@ -2,6 +2,9 @@ package com.epam.adminservice.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -73,6 +76,7 @@ public class CreateGoodDto implements GoodDtoMapper<CreateGoodDto>{
     public void setReleaseDate(LocalDateTime releaseDate) {
         this.releaseDate = releaseDate;
     }
+
 
     @Override
     public CreateGoodDto entityToDto(GoodEntity goodEntity) {
