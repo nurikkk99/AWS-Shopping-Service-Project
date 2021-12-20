@@ -6,21 +6,33 @@ import java.util.Optional;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
-public class CreateGoodDto extends GoodDto {
+public class CreateGoodDto implements GoodDtoMapper<CreateGoodDto>{
 
-    @NotNull
-    @NotBlank
+    @Null(message = "Entity id shouldn't be specified explicitly in request body")
+    private Long id;
+
+    @NotNull(message = "Name must be given")
+    @NotBlank(message = "Name may not be empty")
     private String name;
     private GoodsType type;
 
-    @NotNull
+    @NotNull(message = "Price must be given")
     @Min(value = 1, message = "The value can not be less than 1")
     private BigDecimal price;
     private String manufacturer;
 
-    @NotNull
+    @NotNull(message = "Release date must be given")
     private LocalDateTime releaseDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -64,14 +76,14 @@ public class CreateGoodDto extends GoodDto {
 
     @Override
     public CreateGoodDto entityToDto(GoodEntity goodEntity) {
-        CreateGoodDto createGoodDto = new CreateGoodDto();
-        createGoodDto.setId(goodEntity.getId());
-        createGoodDto.setName(goodEntity.getName());
-        Optional.ofNullable(goodEntity.getType()).ifPresent(x -> createGoodDto.setType(GoodsType.valueOf(x)));
-        createGoodDto.setPrice(goodEntity.getPrice());
-        createGoodDto.setManufacturer(goodEntity.getManufacturer());
-        createGoodDto.setReleaseDate(goodEntity.getReleaseDate());
-        return createGoodDto;
+        CreateGoodDto goodDto = new CreateGoodDto();
+        goodDto.setId(goodEntity.getId());
+        goodDto.setName(goodEntity.getName());
+        Optional.ofNullable(goodEntity.getType()).ifPresent(x -> goodDto.setType(GoodsType.valueOf(x)));
+        goodDto.setPrice(goodEntity.getPrice());
+        goodDto.setManufacturer(goodEntity.getManufacturer());
+        goodDto.setReleaseDate(goodEntity.getReleaseDate());
+        return goodDto;
     }
 
     @Override
