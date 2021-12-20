@@ -4,7 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.test.util.AssertionErrors.assertFalse;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -17,10 +17,12 @@ import static org.hamcrest.core.Is.is;
 import com.epam.adminservice.config.TestContainerConfig;
 import com.epam.adminservice.dto.CreateGoodDto;
 import com.epam.adminservice.dto.GetGoodDto;
-import com.epam.adminservice.dto.GoodsType;
+import com.epam.adminservice.dto.GetImageDto;
+import com.epam.adminservice.entity.GoodsType;
 import com.epam.adminservice.service.GoodsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -32,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.JdbcDatabaseContainer;
@@ -41,11 +44,13 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@ActiveProfiles("local")
 public class GoodsControllerTest {
 
     public static String API_PATH = "/api/goods/";
 
-    private CreateGoodDto savedDto;
+    private CreateGoodDto savedGoodDto;
+    private GetImageDto savedImageDto;
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,14 +65,14 @@ public class GoodsControllerTest {
     private GoodsService goodsService;
 
     @Before
-    public void prepareData() {
+    public void prepareData() throws IOException {
         CreateGoodDto goodDto = new CreateGoodDto();
         goodDto.setName("Stan Smith");
         goodDto.setPrice(BigDecimal.valueOf(7000));
         goodDto.setManufacturer("Adidas");
         goodDto.setType(GoodsType.Sneakers);
         goodDto.setReleaseDate(LocalDateTime.of(1,1,1,1,1,1));
-        savedDto = goodsService.save(goodDto);
+        savedGoodDto = goodsService.save(goodDto);
     }
 
     @After
@@ -114,7 +119,6 @@ public class GoodsControllerTest {
         goodDto.setPrice(BigDecimal.valueOf(5000));
         goodDto.setManufacturer("Levis");
         goodDto.setType(GoodsType.Trousers);
-        goodDto.setReleaseDate(LocalDateTime.of(2,2,2,2,2,2));
 
         byte[] content = objectMapper.writeValueAsBytes(goodDto);
 
@@ -128,20 +132,21 @@ public class GoodsControllerTest {
 
     @Test
     public void putTest() throws Exception {
-        final Long id = savedDto.getId();
-        final BigDecimal originalPrice = savedDto.getPrice();
+        final Long id = savedGoodDto.getId();
+        final BigDecimal originalPrice = savedGoodDto.getPrice();
         final BigDecimal updatedPrice = BigDecimal.valueOf(100000);
         assertNotEquals(originalPrice,updatedPrice);
-        savedDto.setPrice(updatedPrice);
-        savedDto.setId(null);
-        byte[] content = objectMapper.writeValueAsBytes(savedDto);
+        savedGoodDto.setPrice(updatedPrice);
+        savedGoodDto.setId(null);
+        savedGoodDto.setReleaseDate(null);
+        byte[] content = objectMapper.writeValueAsBytes(savedGoodDto);
 
         mockMvc.perform(put(API_PATH + id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(content))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.id").isNotEmpty())
-                .andExpect(jsonPath("$.name", is(savedDto.getName())))
+                .andExpect(jsonPath("$.name", is(savedGoodDto.getName())))
                 .andExpect(jsonPath("$.price").value(updatedPrice));
     }
 

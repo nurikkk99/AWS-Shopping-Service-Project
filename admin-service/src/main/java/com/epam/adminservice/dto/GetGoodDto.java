@@ -1,11 +1,13 @@
 package com.epam.adminservice.dto;
 
+import com.epam.adminservice.entity.GoodEntity;
+import com.epam.adminservice.entity.GoodsType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
-public class GetGoodDto implements GoodDtoMapper<GetGoodDto> {
+public class GetGoodDto implements EntityDtoMapper<GetGoodDto, GoodEntity> {
 
     private Long id;
     private String name;
@@ -61,6 +63,7 @@ public class GetGoodDto implements GoodDtoMapper<GetGoodDto> {
     public void setReleaseDate(LocalDateTime releaseDate) {
         this.releaseDate = releaseDate;
     }
+
 
     @Override
     public GetGoodDto entityToDto(GoodEntity goodEntity) {

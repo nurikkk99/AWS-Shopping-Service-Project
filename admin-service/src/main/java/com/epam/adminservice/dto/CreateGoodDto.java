@@ -1,5 +1,7 @@
 package com.epam.adminservice.dto;
 
+import com.epam.adminservice.entity.GoodEntity;
+import com.epam.adminservice.entity.GoodsType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -8,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-public class CreateGoodDto implements GoodDtoMapper<CreateGoodDto>{
+public class CreateGoodDto implements EntityDtoMapper<CreateGoodDto, GoodEntity> {
 
     @Null(message = "Entity id shouldn't be specified explicitly in request body")
     private Long id;
@@ -23,7 +25,7 @@ public class CreateGoodDto implements GoodDtoMapper<CreateGoodDto>{
     private BigDecimal price;
     private String manufacturer;
 
-    @NotNull(message = "Release date must be given")
+    @Null(message = "Release date must not be given")
     private LocalDateTime releaseDate;
 
     public Long getId() {
@@ -73,6 +75,7 @@ public class CreateGoodDto implements GoodDtoMapper<CreateGoodDto>{
     public void setReleaseDate(LocalDateTime releaseDate) {
         this.releaseDate = releaseDate;
     }
+
 
     @Override
     public CreateGoodDto entityToDto(GoodEntity goodEntity) {

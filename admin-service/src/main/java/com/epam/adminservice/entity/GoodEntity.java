@@ -1,12 +1,16 @@
-package com.epam.adminservice.dto;
+package com.epam.adminservice.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,6 +27,9 @@ public class GoodEntity {
     private String manufacturer;
     private String type;
     private LocalDateTime releaseDate;
+
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "goodEntity")
+    private List<ImageEntity> imagesList = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -70,5 +77,13 @@ public class GoodEntity {
 
     public void setReleaseDate(LocalDateTime releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public List<ImageEntity> getImagesList() {
+        return imagesList;
+    }
+
+    public void setImagesList(List<ImageEntity> imagesList) {
+        this.imagesList = imagesList;
     }
 }

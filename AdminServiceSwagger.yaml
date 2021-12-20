@@ -1,17 +1,18 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   description: This is a simple API for Admin Endpoints
   version: 1.0.0
   title: AWS Admin Endpoints
-  # put the contact info for your development or API team
-
-# tags are used for organizing operations
+host: virtserver.swaggerhub.com
+basePath: /nurikkk99/AWS_Shopping_Project/1.0.0
 tags:
   - name: goods-controller
     description: Goods Controller
   - name: security-controller
     description: Operations for authorizing
-
+schemes:
+  - https
+  - http
 paths:
   /api/goods:
     get:
@@ -21,15 +22,27 @@ paths:
       operationId: getGoods
       produces:
         - application/json
-      parameters: []
+      parameters:
+        - name: page
+          in: query
+          description: The page number (countdown starts from zero)
+          required: false
+          type: integer
+          default: 0
+        - name: size
+          in: query
+          description: The page size
+          required: false
+          type: integer
+          default: 10
       responses:
-        200:
+        "200":
           description: Succesful operation
           schema:
             type: array
             items:
-              $ref: '#/definitions/Good'
-        400:
+              $ref: '#/definitions/GetGoodModel'
+        "400":
           description: Not Found
     post:
       tags:
@@ -44,16 +57,17 @@ paths:
         - in: body
           name: body
           description: Add good
+          required: false
           schema:
             $ref: '#/definitions/CreateUpdateGoodModel'
       responses:
-        200:
+        "200":
           description: Item created
           schema:
             type: array
             items:
-              $ref: '#/definitions/Good'
-        400:
+              $ref: '#/definitions/GetGoodModel'
+        "400":
           description: Bad request
   /api/goods/{goodId}:
     get:
@@ -72,13 +86,12 @@ paths:
           type: integer
           format: int64
       responses:
-        200:
+        "200":
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/Good'
-
+              $ref: '#/definitions/GetGoodModel'
     put:
       tags:
         - goods-controller
@@ -92,6 +105,7 @@ paths:
         - in: body
           name: body
           description: Refresh good
+          required: false
           schema:
             $ref: '#/definitions/CreateUpdateGoodModel'
         - name: goodId
@@ -100,20 +114,19 @@ paths:
           type: integer
           format: int64
       responses:
-        200:
+        "200":
           description: Item created
           schema:
             type: array
             items:
-              $ref: '#/definitions/Good'
-        400:
+              $ref: '#/definitions/GetGoodModel'
+        "400":
           description: Bad request
-
     delete:
       tags:
         - goods-controller
       summary: Delete a good by id
-      description: Deelete a single good by id
+      description: Delete a single good by id
       operationId: deleteGoodById
       produces:
         - application/json
@@ -124,11 +137,127 @@ paths:
           type: integer
           format: int64
       responses:
-        200:
+        "200":
           description: Operation succesfull
-        400:
+        "400":
           description: Bad request
-
+  /api/goods/{goodId}/image:
+    get:
+      tags:
+        - goods-controller
+      summary: Find all images by good Id
+      description: Returns images by good id
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          description: ID of a good which images need to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetImageModel'
+    post:
+      tags:
+        - goods-controller
+      summary: Save image by good id
+      description: Save image by good id
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Item created
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetImageModel'
+        "400":
+          description: Bad request
+    delete:
+      tags:
+        - goods-controller
+      summary: Delete all images of good by good id
+      description: Delete images by good id
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Operation succesfull
+        "400":
+          description: Bad request
+  /api/goods/{goodId}/image/{imageId}:
+    get:
+      tags:
+        - goods-controller
+      summary: Find single image by good Id and image id
+      description: Returns single image
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          description: ID of a good which image need to return
+          required: true
+          type: integer
+          format: int64
+        - name: imageId
+          in: path
+          description: ID of an image which need to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetImageModel'
+    delete:
+      tags:
+        - goods-controller
+      summary: Delete single image of good by good id and image id
+      description: Delete image by good id and image id
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          description: ID of a good which image need to delete
+          required: true
+          type: integer
+          format: int64
+        - name: imageId
+          in: path
+          description: ID of an image which need to delete
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Operation succesfull
+        "400":
+          description: Bad request
   /api/security/admin:
     post:
       tags:
@@ -146,9 +275,8 @@ paths:
           schema:
             $ref: '#/definitions/Admin'
       responses:
-        200:
+        "200":
           description: OK
-
     put:
       tags:
         - security-controller
@@ -165,7 +293,7 @@ paths:
           schema:
             $ref: '#/definitions/Admin'
       responses:
-        200:
+        "200":
           description: OK
   /api/security/admin/login:
     get:
@@ -185,15 +313,12 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: Successful operation
-        400:
+        "400":
           description: Invalid username/password supplied
-
-
-
 definitions:
-  Good:
+  GetGoodModel:
     type: object
     required:
       - name
@@ -220,8 +345,7 @@ definitions:
       releaseDate:
         type: string
         format: date-time
-        example: 2016-08-29T09:12:33
-
+        example: 2016-08-29T09:12:33.000+0000
   CreateUpdateGoodModel:
     type: object
     properties:
@@ -238,11 +362,20 @@ definitions:
       manufacturer:
         type: string
         example: Nike
-      releaseDate:
+  GetImageModel:
+    type: object
+    properties:
+      imageId:
+        type: integer
+        format: int64
+        example: 1
+      goodId:
+        type: integer
+        format: int64
+        example: 1
+      URL:
         type: string
-        format: date-time
-        example: 2016-08-29T09:12:33
-
+        example: http://localhost:4566/admin.goods.images/14.1.Nike.jpeg
   Admin:
     type: object
     properties:
@@ -263,15 +396,3 @@ definitions:
         type: string
     xml:
       name: User
-# Added by API Auto Mocking Plugin
-host: virtserver.swaggerhub.com
-basePath: /nurikkk99/AWS_Shopping_Project/1.0.0
-# schemes:
-#  - http
-# Added by API Auto Mocking Plugin
-# schemes:
-#  - http
-# Added by API Auto Mocking Plugin
-schemes:
-  - https
-  - http
