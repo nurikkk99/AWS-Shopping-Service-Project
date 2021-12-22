@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-public class CreateGoodDto implements GoodDtoMapper<CreateGoodDto>{
+ public class CreateGoodDto implements GoodDtoMapper<CreateGoodDto>{
 
     @Null(message = "Entity id shouldn't be specified explicitly in request body")
     private Long id;

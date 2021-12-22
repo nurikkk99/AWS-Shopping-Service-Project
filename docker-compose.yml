@@ -12,3 +12,9 @@ services:
       - DATA_DIR=/data
       - HOST_TMP_FOLDER = ${TMPDIR:-/tmp/}localstack
       - DOCKER_HOST=unix:///var/run/docker.sock
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
