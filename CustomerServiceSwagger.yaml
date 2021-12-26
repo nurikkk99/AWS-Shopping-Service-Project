@@ -2,56 +2,37 @@
 swagger: "2.0"
 info:
   description: This is a simple API for Customer Endpoints
-  version: 1.0.0
+  version: 1.0.1
   title: AWS Customer Endpoints
 host: virtserver.swaggerhub.com
 basePath: /nurikkk99/AWS_Shopping_Project_Customer/1.0.0
 tags:
-- name: product-controller
-  description: Endpoints for getting and filtering products
-- name: basket-controller
-  description: Operations to manage baskets
-- name: order-controller
-  description: Operations to manage orders
+  - name: product-controller
+    description: Endpoints for getting and filtering products
+  - name: basket-controller
+    description: Operations to manage baskets
+  - name: order-controller
+    description: Operations to manage orders
 schemes:
-- https
-- http
+  - https
+  - http
 paths:
   /api/products:
-    get:
+    post:
       tags:
-      - product-controller
+        - product-controller
       summary: Filtering products by parameters
       description: Returns filtered products
       operationId: filterProducts
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: name
-        in: query
-        description: Name of product
-        required: false
-        type: string
-      - name: type
-        in: query
-        description: Type of product
-        required: false
-        type: string
-      - name: manufacturer
-        in: query
-        description: Manufacturer of product
-        required: false
-        type: string
-      - name: sorting_price_mode
-        in: query
-        description: Ascending or descending sorting mode
-        required: false
-        type: string
-      - name: sorting_latest_mode
-        in: query
-        description: Activating filtering by oldest products mode
-        required: false
-        type: boolean
+        - in: body
+          name: body
+          description: Search products by list of fields and term, filter products by type,manufacturer, ascendind or descending sort by price or date
+          required: false
+          schema:
+            $ref: '#/definitions/SearchAndFilterModel'
       responses:
         "200":
           description: OK
@@ -62,19 +43,19 @@ paths:
   /api/products/{productId}:
     get:
       tags:
-      - product-controller
+        - product-controller
       summary: Find product by Id
       description: Returns a single product
       operationId: getProductById
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: productId
-        in: path
-        description: ID of a product to return
-        required: true
-        type: integer
-        format: int64
+        - name: productId
+          in: path
+          description: ID of a product to return
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
@@ -85,19 +66,19 @@ paths:
   /api/users/{userId}/baskets:
     get:
       tags:
-      - basket-controller
+        - basket-controller
       summary: Find all baskets by userId
       description: Returns baskets of user
       operationId: getBasketsByUserId
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        description: ID of a basket to return
-        required: true
-        type: integer
-        format: int64
+        - name: userId
+          in: path
+          description: ID of a basket to return
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
@@ -107,64 +88,64 @@ paths:
               $ref: '#/definitions/Basket'
     post:
       tags:
-      - basket-controller
+        - basket-controller
       summary: Create a basket for user
       operationId: addBasket
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: body
-        name: body
-        description: Add product
-        required: false
-        schema:
-          $ref: '#/definitions/Basket'
-      - name: userId
-        in: path
-        description: ID of a basket to delete
-        required: true
-        type: integer
-        format: int64
+        - in: body
+          name: body
+          description: Add product
+          required: false
+          schema:
+            $ref: '#/definitions/Basket'
+        - name: userId
+          in: path
+          description: ID of a basket to delete
+          required: true
+          type: integer
+          format: int64
       responses:
         "201":
           description: basket created
     delete:
       tags:
-      - basket-controller
+        - basket-controller
       summary: Delete all baskets by userId
       operationId: deleteBasketsByUserId
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        description: ID of a basket to delete
-        required: true
-        type: integer
-        format: int64
+        - name: userId
+          in: path
+          description: ID of a basket to delete
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
   /api/users/{userId}/baskets/{basketId}:
     get:
       tags:
-      - basket-controller
+        - basket-controller
       summary: Get basket by userId and basketId
       parameters:
-      - name: userId
-        in: path
-        description: ID of a user which basket need to get
-        required: true
-        type: integer
-        format: int64
-      - name: basketId
-        in: path
-        description: ID of a basket to get
-        required: true
-        type: integer
-        format: int64
+        - name: userId
+          in: path
+          description: ID of a user which basket need to get
+          required: true
+          type: integer
+          format: int64
+        - name: basketId
+          in: path
+          description: ID of a basket to get
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
@@ -174,42 +155,42 @@ paths:
               $ref: '#/definitions/Basket'
     delete:
       tags:
-      - basket-controller
+        - basket-controller
       summary: Delete basket by userId and basketId
       parameters:
-      - name: userId
-        in: path
-        description: ID of a user which basket need to delete
-        required: true
-        type: integer
-        format: int64
-      - name: basketId
-        in: path
-        description: ID of a basket to delete
-        required: true
-        type: integer
-        format: int64
+        - name: userId
+          in: path
+          description: ID of a user which basket need to delete
+          required: true
+          type: integer
+          format: int64
+        - name: basketId
+          in: path
+          description: ID of a basket to delete
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
   /api/user/{userId}/baskets/{basketId}/products:
     get:
       tags:
-      - basket-controller
+        - basket-controller
       summary: Get all products in basket by basketId
       parameters:
-      - name: basketId
-        in: path
-        description: ID of a basket which products need to get
-        required: true
-        type: integer
-        format: int64
-      - name: userId
-        in: path
-        description: ID of a user which products need to get
-        required: true
-        type: integer
-        format: int64
+        - name: basketId
+          in: path
+          description: ID of a basket which products need to get
+          required: true
+          type: integer
+          format: int64
+        - name: userId
+          in: path
+          description: ID of a user which products need to get
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
@@ -219,102 +200,102 @@ paths:
               $ref: '#/definitions/Product'
     delete:
       tags:
-      - basket-controller
+        - basket-controller
       summary: Delete all products in basket
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: basketId
-        in: path
-        description: Basket Id
-        required: true
-        type: string
-      - name: userId
-        in: path
-        description: ID of a user which products need to get
-        required: true
-        type: integer
-        format: int64
+        - name: basketId
+          in: path
+          description: Basket Id
+          required: true
+          type: string
+        - name: userId
+          in: path
+          description: ID of a user which products need to get
+          required: true
+          type: integer
+          format: int64
       responses:
         "201":
           description: operation succesful
   /api/users/{userId}/baskets/{basketId}/products/{productId}:
     put:
       tags:
-      - basket-controller
+        - basket-controller
       summary: Add product to basket
       operationId: putBasket
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        description: User Id
-        required: true
-        type: integer
-        format: int64
-      - name: basketId
-        in: path
-        description: Basket Id
-        required: true
-        type: string
-      - name: productId
-        in: path
-        description: Product Id
-        required: true
-        type: string
+        - name: userId
+          in: path
+          description: User Id
+          required: true
+          type: integer
+          format: int64
+        - name: basketId
+          in: path
+          description: Basket Id
+          required: true
+          type: string
+        - name: productId
+          in: path
+          description: Product Id
+          required: true
+          type: string
       responses:
         "201":
           description: Operation succesful
     delete:
       tags:
-      - basket-controller
+        - basket-controller
       summary: Delete product from basket
       operationId: deleteFromBasket
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        description: User Id
-        required: true
-        type: integer
-        format: int64
-      - name: basketId
-        in: path
-        description: Basket Id
-        required: true
-        type: string
-      - name: productId
-        in: path
-        description: Product Id
-        required: true
-        type: string
+        - name: userId
+          in: path
+          description: User Id
+          required: true
+          type: integer
+          format: int64
+        - name: basketId
+          in: path
+          description: Basket Id
+          required: true
+          type: string
+        - name: productId
+          in: path
+          description: Product Id
+          required: true
+          type: string
       responses:
         "201":
           description: operation succesful
   /api/users/{userId}/orders:
     get:
       tags:
-      - order-controller
+        - order-controller
       summary: Find all orders by clientId
       description: Returns orders of clients
       operationId: getOrdersByUserId
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        description: ID of a client which orders need to return
-        required: true
-        type: integer
-        format: int64
+        - name: userId
+          in: path
+          description: ID of a client which orders need to return
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
@@ -324,62 +305,62 @@ paths:
               $ref: '#/definitions/Order'
     post:
       tags:
-      - order-controller
+        - order-controller
       summary: Create an order for client by clientId and basketId
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: basketId
-        in: query
-        required: true
-        type: integer
-        format: int64
-      - name: userId
-        in: path
-        description: ID of a client whom order is creating
-        required: true
-        type: integer
-        format: int64
+        - name: basketId
+          in: query
+          required: true
+          type: integer
+          format: int64
+        - name: userId
+          in: path
+          description: ID of a client whom order is creating
+          required: true
+          type: integer
+          format: int64
       responses:
         "201":
           description: order created
     delete:
       tags:
-      - order-controller
+        - order-controller
       summary: Delete all orders by clientId
       operationId: deleteOrderByClientId
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        description: ID of an order to delete
-        required: true
-        type: integer
-        format: int64
+        - name: userId
+          in: path
+          description: ID of an order to delete
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
   /api/users/{userId}/orders/{orderId}:
     get:
       tags:
-      - order-controller
+        - order-controller
       summary: Get order by user Id and order Id
       parameters:
-      - name: userId
-        in: path
-        description: ID of a user which order need to get
-        required: true
-        type: integer
-        format: int64
-      - name: orderId
-        in: path
-        description: ID of an order to get
-        required: true
-        type: integer
-        format: int64
+        - name: userId
+          in: path
+          description: ID of a user which order need to get
+          required: true
+          type: integer
+          format: int64
+        - name: orderId
+          in: path
+          description: ID of an order to get
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
@@ -389,65 +370,89 @@ paths:
               $ref: '#/definitions/Order'
     put:
       tags:
-      - order-controller
+        - order-controller
       summary: Update order by user Id and order Id
       parameters:
-      - in: body
-        name: body
-        description: Update order
-        required: false
-        schema:
-          $ref: '#/definitions/Order'
-      - name: userId
-        in: path
-        description: ID of a user which order need to update
-        required: true
-        type: integer
-        format: int64
-      - name: orderId
-        in: path
-        description: ID of an order to update
-        required: true
-        type: integer
-        format: int64
+        - in: body
+          name: body
+          description: Update order
+          required: false
+          schema:
+            $ref: '#/definitions/Order'
+        - name: userId
+          in: path
+          description: ID of a user which order need to update
+          required: true
+          type: integer
+          format: int64
+        - name: orderId
+          in: path
+          description: ID of an order to update
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
     delete:
       tags:
-      - order-controller
+        - order-controller
       summary: Delete order by client Id and order Id
       parameters:
-      - name: userId
-        in: path
-        description: ID of a user which order need to delete
-        required: true
-        type: integer
-        format: int64
-      - name: orderId
-        in: path
-        description: ID of an order to delete
-        required: true
-        type: integer
-        format: int64
+        - name: userId
+          in: path
+          description: ID of a user which order need to delete
+          required: true
+          type: integer
+          format: int64
+        - name: orderId
+          in: path
+          description: ID of an order to delete
+          required: true
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
 definitions:
+  SearchAndFilterModel:
+    type: object
+    properties:
+      searchFields:
+        type: array
+        items:
+          type: string
+        example: [name, definition]
+      searchTerm:
+        type: string
+        example: red sneakers
+      type:
+        type: string
+        example: Sneakers
+      manufacturer:
+        type: string
+        example: Nike
+      sortType:
+        type: string
+        example: price, date
+      sortOrder:
+        type: string
+        example: ASC, DESC
+
   Product:
     type: object
     required:
-    - id
-    - manufacturer
-    - name
-    - price
-    - releaseDate
-    - type
+      - id
+      - manufacturer
+      - name
+      - price
+      - releaseDate
+      - type
     properties:
       id:
-        type: string
-        format: uuid
-        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        type: integer
+        format: int64
+        example: 1
       name:
         type: string
         example: AirForce
@@ -468,9 +473,9 @@ definitions:
   Basket:
     type: object
     required:
-    - id
-    - products
-    - userId
+      - id
+      - products
+      - userId
     properties:
       id:
         type: string
@@ -483,8 +488,8 @@ definitions:
   Order:
     type: object
     required:
-    - id
-    - products
+      - id
+      - products
     properties:
       id:
         type: string
