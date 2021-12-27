@@ -1,4 +1,4 @@
-package com.epam.adminservice.dto;
+package com.epam.adminservice.entity;
 
 public enum GoodsType {
     Sneakers,
