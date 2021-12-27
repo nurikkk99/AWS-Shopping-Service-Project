@@ -1,8 +1,8 @@
 package com.epam.customerservice.controller;
 
+import com.epam.customerservice.dto.GetImageDto;
 import com.epam.customerservice.dto.ProductDto;
 import com.epam.customerservice.dto.SearchAndFilterRequestDto;
-import com.epam.customerservice.entity.ProductEntity;
 import com.epam.customerservice.service.ProductService;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,21 +28,25 @@ public class ProductController {
         return productService.findById(id);
     }
 
-    @PostMapping("/filter")
+    @PostMapping()
     public List<ProductDto> searchAndFilter(@RequestBody SearchAndFilterRequestDto requestDto){
         return productService.searchAndFilter(requestDto);
     }
 
-    //TO DELETE
-    @PostMapping
-    public void save(@RequestBody ProductDto productEntity) {
-        productService.save(productEntity);
+    @GetMapping("/{id}/image")
+    public List<GetImageDto> getAllImages(@PathVariable("id") long goodId) {
+        return productService.getImagesByGoodId(goodId);
+    }
+
+    @GetMapping("/{id}/image/{imageId}")
+    public GetImageDto getImage(@PathVariable("id") long goodId, @PathVariable("imageId") long imageId)  {
+        return productService.getImageByImageId(imageId);
     }
 
     //TO DELETE
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        productService.deleteById(id);
+    @DeleteMapping
+    public void delete() {
+        productService.deleteAll();
     }
 
 }

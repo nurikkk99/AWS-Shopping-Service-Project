@@ -96,4 +96,10 @@ public class GoodsController {
         goodsService.deleteImage(imageId);
         return ResponseEntity.ok().body("Image with id " + imageId + " was deleted");
     }
+
+    //TO DELETE
+    @DeleteMapping
+    public void deleteAll() {
+        goodsService.deleteAll();
+    }
 }
