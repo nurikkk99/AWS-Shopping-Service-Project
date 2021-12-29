@@ -127,7 +127,7 @@ public class ProductControllerTest {
 
         byte[] content = objectMapper.writeValueAsBytes(requestDto);
 
-        final String contentAsString = mockMvc.perform(post(API_PATH + "filter").contentType(MediaType.APPLICATION_JSON_VALUE).
+        final String contentAsString = mockMvc.perform(post(API_PATH).contentType(MediaType.APPLICATION_JSON_VALUE).
                         content(content))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
