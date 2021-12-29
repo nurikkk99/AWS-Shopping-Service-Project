@@ -1,8 +1,7 @@
----
 swagger: "2.0"
 info:
   description: This is a simple API for Customer Endpoints
-  version: 1.0.1
+  version: 1.0.2
   title: AWS Customer Endpoints
 host: virtserver.swaggerhub.com
 basePath: /nurikkk99/AWS_Shopping_Project_Customer/1.0.0
@@ -63,6 +62,60 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Product'
+
+  /api/products/{productId}/image:
+    get:
+      tags:
+        - product-controller
+      summary: Find all images by good Id
+      description: Returns images by good id
+      produces:
+        - application/json
+      parameters:
+        - name: productId
+          in: path
+          description: ID of a good which images need to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetImageModel'
+
+  /api/products/{productId}/image/{imageId}:
+    get:
+      tags:
+        - product-controller
+      summary: Find single image by good Id and image id
+      description: Returns single image
+      produces:
+        - application/json
+      parameters:
+        - name: productId
+          in: path
+          description: ID of a good which image need to return
+          required: true
+          type: integer
+          format: int64
+        - name: imageId
+          in: path
+          description: ID of an image which need to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetImageModel'
+
+
   /api/users/{userId}/baskets:
     get:
       tags:
@@ -470,6 +523,22 @@ definitions:
         type: string
         format: date-time
         example: 2016-08-29T09:12:33.001+0000
+
+  GetImageModel:
+    type: object
+    properties:
+      imageId:
+        type: integer
+        format: int64
+        example: 1
+      goodId:
+        type: integer
+        format: int64
+        example: 1
+      URL:
+        type: string
+        example: 'http://localhost:4566/admin.goods.images/14.1.Nike.jpeg'
+
   Basket:
     type: object
     required:

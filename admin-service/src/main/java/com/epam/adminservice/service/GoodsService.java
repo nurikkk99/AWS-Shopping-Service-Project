@@ -38,20 +38,21 @@ public class GoodsService {
     private GetGoodDto getGoodDto;
     private GetImageDto getImageDto;
     private List<String> validImageFormats;
+    private QueueService queueService;
 
     public GoodsService(
             GoodsRepository goodsRepository, ImageS3Repository imageS3Repository, ImageSqlRepository imageSqlRepository,
-            @Value("${valid-image-formats}") List<String> validImageFormats
-    ) {
+            @Value("${valid-image-formats}") List<String> validImageFormats, QueueService queueService) {
         this.goodsRepository = goodsRepository;
         this.imageS3Repository = imageS3Repository;
         this.imageSqlRepository = imageSqlRepository;
         this.getGoodDto = new GetGoodDto();
         this.getImageDto = new GetImageDto();
         this.validImageFormats = validImageFormats;
+        this.queueService = queueService;
     }
 
-    public List<GetGoodDto> findAll(){
+    public List<GetGoodDto> findAll() {
         return goodsRepository.findAll().stream().map(getGoodDto::entityToDto).collect(Collectors.toList());
     }
 
@@ -62,7 +63,10 @@ public class GoodsService {
     public CreateGoodDto save(CreateGoodDto goodDto) {
         logger.info("Saving good entity");
         goodDto.setReleaseDate(LocalDateTime.now());
-        return goodDto.entityToDto(goodsRepository.save(goodDto.dtoToEntity()));
+        CreateGoodDto savedGoodDto;
+        savedGoodDto = goodDto.entityToDto(goodsRepository.save(goodDto.dtoToEntity()));
+        queueService.addProductToQueue("save", savedGoodDto);
+        return savedGoodDto;
     }
 
     public UpdateGoodDto update(Long id, UpdateGoodDto goodDto) {
@@ -70,8 +74,10 @@ public class GoodsService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity with id " + id + " does not exist"));
         logger.info("Updating good entity with id = {}", id);
         goodDto.setId(id);
-        goodDto.setReleaseDate(goodEntity.getReleaseDate());
-        return goodDto.entityToDto(goodsRepository.save(goodDto.dtoToEntity()));
+        goodDto.setReleaseDate(getGoodDto.entityToDto(goodEntity).getReleaseDate());
+        GoodEntity savedEntity = goodsRepository.save(goodDto.dtoToEntity());
+        queueService.addProductToQueue("update", new CreateGoodDto().entityToDto(savedEntity));
+        return goodDto.entityToDto(savedEntity);
     }
 
     public GetGoodDto findOne(Long id) {
@@ -108,7 +114,7 @@ public class GoodsService {
         GoodEntity goodEntity = goodsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entity with id " + id + " does not exist"));
         String fileFormat = determineAndValidateFileFormat(file.getBytes());
-        String imageKey = String.join(".", generateImageKey(goodEntity),fileFormat);
+        String imageKey = String.join(".", generateImageKey(goodEntity), fileFormat);
         String imageURI;
         try {
             imageURI = imageS3Repository.saveImage(imageKey, file);
@@ -121,6 +127,7 @@ public class GoodsService {
         imageEntity.setImageKey(imageKey);
         logger.info("Saving image entity with good id = {}", id);
         ImageEntity savedImageEntity = imageSqlRepository.save(imageEntity);
+        queueService.addImageToQueue("save", getImageDto.entityToDto(savedImageEntity));
         return getImageDto.entityToDto(savedImageEntity);
     }
 
@@ -131,30 +138,37 @@ public class GoodsService {
         imageS3Repository.deleteImage(imageEntity.getImageKey());
         logger.info("Deleting image entity with image id = {} in sql repository", imageId);
         imageSqlRepository.deleteById(imageId);
+        queueService.addImageToQueue("delete", getImageDto.entityToDto(imageEntity));
     }
 
     public void deleteAllImagesByGoodId(long goodId) {
         GoodEntity goodEntity = goodsRepository.findById(goodId)
                 .orElseThrow(() -> new EntityNotFoundException("Entity with id " + goodId + " does not exist"));
-        List<ImageEntity> imageEntities= imageSqlRepository.findAllByGoodEntity(goodEntity);
-        List<String> imageKeys = imageEntities.stream().map(x->x.getImageKey()).collect(Collectors.toList());
+        List<ImageEntity> imageEntities = imageSqlRepository.findAllByGoodEntity(goodEntity);
+        List<String> imageKeys = imageEntities.stream().map(x -> x.getImageKey()).collect(Collectors.toList());
         logger.info("Deleting images with good id {} in s3 repository", goodId);
         imageS3Repository.deleteImages(imageKeys);
         logger.info("Deleting images with good id {} in sql repository", goodId);
         imageSqlRepository.deleteAllByGoodEntity(goodEntity);
+
+        Iterator<ImageEntity> iterator = imageEntities.iterator();
+        while (iterator.hasNext()){
+            queueService.addImageToQueue("delete", getImageDto.entityToDto(iterator.next()));
+        }
     }
 
     private String generateImageKey(GoodEntity goodEntity) {
         int imageNumber = Optional.ofNullable(goodEntity.getImagesList().size()).orElse(0) + 1;
-        String imageKey = String.join(".", goodEntity.getId().toString(),Integer.toString(imageNumber),
-                goodEntity.getManufacturer());
+        String imageKey = String.join(".", goodEntity.getId().toString(), Integer.toString(imageNumber),
+                goodEntity.getManufacturer()
+        );
         return imageKey;
     }
 
-    private String determineAndValidateFileFormat(byte [] fileAsByteArray) throws IOException {
+    private String determineAndValidateFileFormat(byte[] fileAsByteArray) throws IOException {
         Iterator<ImageReader> imageReaders;
-        try (ImageInputStream imageInputStream =
-                ImageIO.createImageInputStream(new ByteArrayInputStream(fileAsByteArray))) {
+        try (ImageInputStream imageInputStream = ImageIO.createImageInputStream(
+                new ByteArrayInputStream(fileAsByteArray))) {
             imageReaders = ImageIO.getImageReaders(imageInputStream);
         }
 
