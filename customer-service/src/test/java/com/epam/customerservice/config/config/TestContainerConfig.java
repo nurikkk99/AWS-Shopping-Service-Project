@@ -1,4 +1,4 @@
-package com.epam.adminservice.config;
+package com.epam.customerservice.config.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

@@ -42,11 +42,4 @@ public class ProductController {
     public GetImageDto getImage(@PathVariable("id") long goodId, @PathVariable("imageId") long imageId)  {
         return productService.getImageByImageId(imageId);
     }
-
-    //TO DELETE
-    @DeleteMapping
-    public void delete() {
-        productService.deleteAll();
-    }
-
 }

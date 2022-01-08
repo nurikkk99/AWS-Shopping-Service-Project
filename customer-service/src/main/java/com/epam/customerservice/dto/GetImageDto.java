@@ -4,23 +4,23 @@ import com.epam.customerservice.entity.ImageEntity;
 import java.util.Objects;
 
 public class GetImageDto implements EntityDtoMapper<GetImageDto, ImageEntity>{
-    private long imageId;
-    private long goodId;
+    private Long imageId;
+    private Long goodId;
     private String imageURI;
 
-    public long getImageId() {
+    public Long getImageId() {
         return imageId;
     }
 
-    public void setImageId(long imageId) {
+    public void setImageId(Long imageId) {
         this.imageId = imageId;
     }
 
-    public long getGoodId() {
+    public Long getGoodId() {
         return goodId;
     }
 
-    public void setGoodId(long goodId) {
+    public void setGoodId(Long goodId) {
         this.goodId = goodId;
     }
 

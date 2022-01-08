@@ -97,9 +97,11 @@ public class ProductService {
     }
 
     public List<GetImageDto> getImagesByGoodId(long goodId) {
-        elasticDatabaseRepository.findById(goodId)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + goodId + " does not exist"));
-        return imageRepository.findAllByGoodId(goodId).stream().map(x -> getImageDto.entityToDto(x))
+        List<ImageEntity> imageList = imageRepository.findAllByGoodId(goodId);
+        if(imageList.isEmpty()) {
+            throw new EntityNotFoundException("Good entity with id " + goodId + "does not exist");
+        }
+        return imageList.stream().map(x -> getImageDto.entityToDto(x))
                 .collect(Collectors.toList());
     }
 
@@ -107,5 +109,9 @@ public class ProductService {
         ImageEntity imageEntity = imageRepository.findById(imageId)
                 .orElseThrow(() -> new EntityNotFoundException("Image with id " + imageId + " does not exist"));
         return getImageDto.entityToDto(imageEntity);
+    }
+
+    public void deleteAllImages() {
+        imageRepository.deleteAll();
     }
 }
